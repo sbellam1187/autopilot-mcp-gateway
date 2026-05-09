@@ -1,0 +1,34 @@
+endpoint: https://apollo-graphql-router-agentic-test.cloud.aa.com/
+headers:
+  Authorization: "Bearer "
+  apollographql-client-name: "APIMgmtGQL"
+# logging:
+#   level: debug
+transport:
+  type: streamable_http
+  # auth:
+  #   servers:
+  #     - https://idptest.aa.com
+  #   audiences:
+  #     - APIMgmtGQL-7912682-test-TcxOY
+  #   resource: http://127.0.0.1:5002/mcp
+  #   scopes:
+  #     - openid
+operations:
+  source: uplink #collection
+  id: 2745ee7c-b0eb-4fde-80e3-cbb42a8d3609
+schema:
+  source: uplink
+introspection:
+  execute:
+    enabled: false
+  introspect:
+    enabled: false
+    minify: false
+  search:
+    enabled: false
+    minify: false
+    index_memory_bytes: 50000000
+    leaf_depth: 1
+  validate:
+    enabled: false

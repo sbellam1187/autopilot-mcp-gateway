@@ -1,0 +1,103 @@
+# Basic server settings
+[server]
+listen_address = "0.0.0.0:8000"
+
+[server.health]
+enabled = true
+path = "/health"
+
+#[server.oauth]
+#url = "{{ env.PF_JWKS }}"
+#expected_issuer = "{{ env.PF_ISSUER }}"
+#expected_audience = "{{ env.PF_AUDIENCE }}"
+
+#[server.oauth.protected_resource]
+#resource = "http://localhost:3000"
+#authorization_servers = ["{{ env.PF_ISSUER }}"]
+
+[llm]
+enabled = false
+
+[mcp]
+enabled = true
+path = "/mcp"
+enable_structured_content = true
+
+# Cache configuration for performance
+[mcp.downstream_cache]
+max_size = 1000
+idle_timeout = "10m"
+
+# APOLLO MCP SERVER
+# [mcp.servers.graph]
+# url = "{{ env.GRAPH_MCP_SERVER_URL }}"
+# protocol = "streamable-http"
+# auth.type = "forward" 
+# tls.verify_certs = true
+
+# GRAPH MCP SERVER
+#[mcp.servers.graph]
+#url = "{{ env.GRAPH_MCP_SERVER_URL }}"
+#protocol = "streamable-http"
+#auth.type = "forward"
+#tls.verify_certs = true
+
+# CAAS MCP SERVER
+#[mcp.servers.caas]
+#url = "{{ env.CAAS_MCP_SERVER_URL }}"
+#protocol = "streamable-http"
+#auth.type = "forward"
+#tls.verify_certs = true
+
+# GITHUB MCP SERVER
+[mcp.servers.github]
+url = "{{ env.GITHUB_MCP_SERVER_URL }}"
+protocol = "streamable-http"
+auth.token = "{{ env.GITHUB_TOKEN }}"
+tls.verify_certs = true
+
+# Add custom headers
+# [[mcp.servers.github.headers]]
+# X-MCP-Readonly = "true"
+
+# FETCH MCP SERVER
+[mcp.servers.fetch]
+url = "{{ env.FETCH_MCP_SERVER_URL }}"
+protocol = "streamable-http"
+tls.verify_certs = true
+
+# SEQUENTIAL THINKING MCP SERVER
+[mcp.servers.sequential_thinking]
+url = "{{ env.SEQUENTIAL_THINKING_MCP_SERVER_URL }}"
+protocol = "streamable-http"
+tls.verify_certs = true
+
+# AZURE MCP SERVER
+[mcp.servers.azure]
+url = "{{ env.AZURE_MCP_SERVER_URL }}"
+protocol = "streamable-http"
+tls.verify_certs = true
+
+# PLAYWRIGHT MCP SERVER
+[mcp.servers.playwright]
+url = "{{ env.PLAYWRIGHT_MCP_SERVER_URL }}"
+protocol = "streamable-http"
+tls.verify_certs = true
+
+# SLACK MCP SERVER
+[mcp.servers.slack]
+url = "{{ env.SLACK_MCP_SERVER_URL }}"
+protocol = "streamable-http"
+tls.verify_certs = true
+
+# MARKITDOWN MCP SERVER
+# [mcp.servers.markitdown]
+# url = "{{ env.MARKITDOWN_MCP_SERVER_URL }}"
+# protocol = "streamable-http"
+# tls.verify_certs = true
+
+# AZURE AKS MCP SERVER
+[mcp.servers.aks]
+url = "{{ env.AZURE_AKS_MCP_SERVER_URL }}"
+protocol = "streamable-http"
+tls.verify_certs = true

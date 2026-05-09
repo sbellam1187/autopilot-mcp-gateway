@@ -1,0 +1,9 @@
+FROM docker.aa.com/prod/aa.com/node:23-dev@sha256:d83d22b6854ae769dec8f6b9d97e2df8e38b3fc5cd6e44e008bb9c0a717e4d70
+
+WORKDIR /app
+
+COPY --chown=node:node startup.sh .
+
+RUN chmod +x /app/startup.sh
+
+ENTRYPOINT ["/bin/bash", "/app/startup.sh"]

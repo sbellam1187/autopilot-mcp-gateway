@@ -1,0 +1,170 @@
+services:
+  # aa-graph-mcp-server:
+  #   container_name: aa-graph-mcp-server
+  #   image: docker.aa.com/prod/aa-graph-mcp-server:v0.4.4 #localhost/aa-graph-mcp-server:latest
+  #   ports:
+  #     - "8001:8000"
+  #   env_file:
+  #     - .env
+
+  # apollo-mcp-server:
+  #   container_name: apollo-mcp-server
+  #   image: docker.aa.com/prod/apollographql/apollo-mcp-server:latest
+  #   volumes:
+  #     - ./conf/apollo-config.yaml:/config.yaml
+  #   ports:
+  #     - "5002:5000"
+  #   env_file:
+  #     - .env
+  #   command: ["/config.yaml"]
+
+  # caas-mcp-server:
+  #   container_name: caas-mcp-server
+  #   image: docker.aa.com/prod/caas-mcp:v0.3.2
+  #   ports:
+  #     - "8002:8000"
+  #   env_file:
+  #     - .env
+
+  fetch-mcp:
+    image: localhost/autopilot-mcp-wrapper:latest
+    container_name: fetch-mcp
+    ports:
+      - "8081:8081"
+    environment:
+      - MCP_SERVER_TYPE=fetch-mcp
+      - MCP_PORT=8081
+      - MCP_COMMAND_TYPE=npx
+      - MCP_PACKAGE=fetch-mcp
+      - DEFAULT_LIMIT=50000
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "http://localhost:8081/healthz"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  sequential-thinking-mcp:
+    image: localhost/autopilot-mcp-wrapper:latest
+    container_name: sequential-thinking-mcp
+    ports:
+      - "8082:8082"
+    environment:
+      - MCP_SERVER_TYPE=sequential-thinking-mcp
+      - MCP_PORT=8082
+      - MCP_COMMAND_TYPE=npx
+      - MCP_PACKAGE=@modelcontextprotocol/server-sequential-thinking
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "http://localhost:8082/healthz"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  azure-mcp:
+    image: localhost/autopilot-mcp-wrapper:latest
+    container_name: azure-mcp
+    ports:
+      - "8083:8083"
+    environment:
+      - MCP_SERVER_TYPE=azure-mcp
+      - MCP_PORT=8083
+      - MCP_COMMAND_TYPE=npx
+      - MCP_PACKAGE=@azure/mcp@latest server start
+    env_file:
+      - .env
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "http://localhost:8083/healthz"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  playwright-mcp:
+    image: localhost/autopilot-mcp-wrapper:latest
+    container_name: playwright-mcp
+    ports:
+      - "8084:8084"
+    env_file:
+      - .env
+    environment:
+      - MCP_SERVER_TYPE=playwright-mcp
+      - MCP_PORT=8084
+      - MCP_COMMAND_TYPE=npx
+      - MCP_PACKAGE=@playwright/mcp@latest
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "http://localhost:8084/healthz"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  # slack-mcp:
+  #   image: localhost/autopilot-mcp-wrapper:latest
+  #   container_name: slack-mcp
+  #   ports:
+  #     - "8085:8085"
+  #   env_file:
+  #     - .env
+  #   environment:
+  #     - MCP_SERVER_TYPE=slack-mcp
+  #     - MCP_PORT=8085
+  #     - MCP_COMMAND_TYPE=npx
+  #     - MCP_PACKAGE=slack-mcp-server@latest --transport stdio
+  #   healthcheck:
+  #     test: ["CMD", "wget", "--spider", "http://localhost:8085/healthz"]
+  #     interval: 30s
+  #     timeout: 10s
+  #     retries: 5
+
+  # markitdown-mcp:
+  #   image: localhost/markitdown-mcp:latest
+  #   container_name: markitdown-mcp
+  #   ports:
+  #     - "8086:8086"
+
+  azure-aks-mcp:
+    image: docker.aa.com/prod/azure/aks-mcp:latest
+    container_name: azure-aks-mcp
+    ports:
+      - "8087:8000"
+    env_file:
+      - .env
+
+  # ado-mcp:
+  #   image: localhost/autopilot-mcp-wrapper:latest
+  #   container_name: ado-mcp
+  #   ports:
+  #     - "8088:8088"
+  #   environment:
+  #     - MCP_SERVER_TYPE=ado-mcp
+  #     - MCP_PORT=8088
+  #     - MCP_COMMAND_TYPE=npx
+  #     - MCP_PACKAGE=@azure-devops/mcp Contoso -d core work work-items
+  #   healthcheck:
+  #     test: ["CMD", "wget", "--spider", "http://localhost:8088/healthz"]
+  #     interval: 30s
+  #     timeout: 10s
+  #     retries: 5
+
+  nexus:
+    container_name: nexus
+    image: localhost/autopilot-mcp-gateway:latest
+    ports:
+      - "8006:8000"
+      - "3002:3000"
+    env_file:
+      - .env
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
+    depends_on:
+      fetch-mcp:
+        condition: service_healthy
+      sequential-thinking-mcp:
+        condition: service_healthy
+      azure-mcp:
+        condition: service_healthy
+      playwright-mcp:
+        condition: service_healthy
+      # slack-mcp:
+      #   condition: service_healthy
